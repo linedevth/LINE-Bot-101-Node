@@ -16,25 +16,45 @@ app.use(bodyParser.json())
 // Push
 app.get('/webhook', (req, res) => {
 	// push block
+	let msg = 'Hello World!'
+	push(msg)
+	res.send(msg)
 })
 
 // Reply
 app.post('/webhook', (req, res) => {
 	// reply block
+	let reply_token = req.body.events[0].replyToken
+	let msg = req.body.events[0].message.text
+	reply(reply_token, msg)
 })
 
 function push(msg) {
 	let body = JSON.stringify({
-    // push body
-  })
-  // curl
+		// push body
+		to: 'yyyyy',
+		messages: [
+			{
+				type: 'text',
+				text: msg
+			}
+		]
+	})
+	curl('push', body)
 }
 
 function reply(reply_token, msg) {
 	let body = JSON.stringify({
-    // reply body
-  })
-  // curl
+		// reply body
+		replyToken: reply_token,
+		messages: [
+			{
+				type: 'text',
+				text: msg
+			}
+		]
+	})
+	curl('reply', body);
 }
 
 function curl(method, body) {
